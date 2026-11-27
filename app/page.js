@@ -29,7 +29,7 @@ export default function Home() {
     setBusy(false);
     if (rpcError) return setError(rpcError.message);
     localStorage.setItem(`ipl-player:${roomCode}`, JSON.stringify({ memberId:id, name:name.trim(), team }));
-    router.push(`/room/${data || roomCode}`);
+    router.push(`/room/${roomCode}`);
   };
   return <main className="home shell">
     <div className="eyebrow">SEASON 2026</div>
