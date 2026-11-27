@@ -192,3 +192,32 @@ begin
   if not exists (select 1 from pg_publication_rel pr join pg_class c on c.oid=pr.prrelid join pg_namespace n on n.oid=c.relnamespace join pg_publication p on p.oid=pr.prpubid where p.pubname='supabase_realtime' and n.nspname='public' and c.relname='room_messages') then alter publication supabase_realtime add table public.room_messages; end if;
 end $$;
 notify pgrst, 'reload schema';
+
+
+-- Room-only multiplayer backend ported from the old IPL auction project.
+create or replace function public.create_auction_room(p_code text,p_member_id text,p_name text,p_team text,p_timer_seconds integer default 20)
+returns jsonb language plpgsql security definer set search_path=public as $$
+declare v_code text:=upper(trim(p_code)); v_member uuid:=p_member_id::uuid; v_room_id uuid;
+begin
+ if length(v_code)<>5 then raise exception 'ROOM_CODE_INVALID'; end if;
+ if length(trim(p_name)) not between 1 and 24 then raise exception 'DISPLAY_NAME_INVALID'; end if;
+ if upper(trim(p_team)) not in ('CSK','MI','RCB','KKR','DC','GT','LSG','PBKS','RR','SRH') then raise exception 'FRANCHISE_INVALID'; end if;
+ if p_timer_seconds not in (5,10,15,20) then raise exception 'TIMER_INVALID'; end if;
+ insert into public.rooms(code,host,host_member_id,host_name,host_team,status,timer_seconds,current_index,current_bid,current_bidder,paused)
+ values(v_code,v_member,v_member,p_name,upper(trim(p_team)),'auction',p_timer_seconds,0,0,null,false) returning id into v_room_id;
+ insert into public.room_members(room_id,user_id,room_code,member_id,name,team,purse,joined_at)
+ values(v_room_id,v_member,v_code,p_member_id,trim(p_name),upper(trim(p_team)),12000,now());
+ return jsonb_build_object('room_id',v_room_id,'room_code',v_code,'member_id',p_member_id,'session_key',p_member_id,'is_host',true);
+exception when unique_violation then raise exception 'ROOM_CODE_OR_FRANCHISE_ALREADY_EXISTS'; end; $$;
+create or replace function public.join_auction_room(p_code text,p_member_id text,p_name text,p_team text)
+returns jsonb language plpgsql security definer set search_path=public as $$
+declare v_code text:=upper(trim(p_code)); v_member uuid:=p_member_id::uuid; v_room_id uuid;
+begin
+ select id into v_room_id from public.rooms where code=v_code for update;
+ if v_room_id is null then raise exception 'ROOM_NOT_FOUND'; end if;
+ insert into public.room_members(room_id,user_id,room_code,member_id,name,team,purse,joined_at)
+ values(v_room_id,v_member,p_code,p_member_id,trim(p_name),upper(trim(p_team)),12000,now());
+ return jsonb_build_object('room_id',v_room_id,'room_code',v_code,'member_id',p_member_id,'session_key',p_member_id,'is_host',false);
+exception when unique_violation then raise exception 'FRANCHISE_OR_MEMBER_ALREADY_IN_ROOM'; end; $$;
+grant execute on function public.create_auction_room(text,text,text,text,integer) to anon,authenticated;
+grant execute on function public.join_auction_room(text,text,text,text) to anon,authenticated;
