@@ -11,6 +11,18 @@ create table if not exists public.players (
 );
 alter table public.players add column if not exists base_price integer;
 alter table public.players add column if not exists sort_order integer;
+alter table public.players add column if not exists overseas boolean default false;
+alter table public.players alter column overseas set default false;
+update public.players set overseas=false where overseas is null;
+with numbered as (
+  select id, (row_number() over (order by id::text) - 1)::integer as new_sort_order
+  from public.players
+  where sort_order is null
+)
+update public.players p
+set sort_order=n.new_sort_order
+from numbered n
+where p.id=n.id;
 create table if not exists public.rooms (
   id uuid unique default gen_random_uuid(),
   code text primary key check (length(code)=5),
@@ -165,9 +177,9 @@ begin
  update rooms set status='simulation',paused=true where code=r.code;
 end; $$;
 
-insert into players(id,name,role,country,base_price,sort_order) values
-(1,'Virat Kohli','BAT','India',200,0),(2,'Jasprit Bumrah','PACE','India',200,1),(3,'Rashid Khan','SPIN','Afghanistan',150,2),(4,'Ruturaj Gaikwad','BAT','India',100,3),(5,'Heinrich Klaasen','WK','South Africa',125,4),(6,'Hardik Pandya','AR','India',125,5),(7,'Pat Cummins','PACE','Australia',200,6),(8,'Yashasvi Jaiswal','BAT','India',100,7),(9,'Ravindra Jadeja','AR','India',150,8),(10,'Travis Head','BAT','Australia',100,9),(11,'Kuldeep Yadav','SPIN','India',75,10),(12,'Shubman Gill','BAT','India',200,11),(13,'Sanju Samson','WK','India',150,12),(14,'Andre Russell','AR','West Indies',125,13),(15,'Mohammed Siraj','PACE','India',100,14),(16,'Suryakumar Yadav','BAT','India',200,15),(17,'Phil Salt','WK','England',100,16),(18,'Axar Patel','AR','India',100,17),(19,'Arshdeep Singh','PACE','India',100,18),(20,'Yuzvendra Chahal','SPIN','India',100,19)
-on conflict(id) do update set name=excluded.name,role=excluded.role,country=excluded.country,base_price=excluded.base_price,sort_order=excluded.sort_order;
+insert into players(id,name,role,country,overseas,base_price,sort_order) values
+(1,'Virat Kohli','BAT','India',false,200,0),(2,'Jasprit Bumrah','PACE','India',false,200,1),(3,'Rashid Khan','SPIN','Afghanistan',true,150,2),(4,'Ruturaj Gaikwad','BAT','India',false,100,3),(5,'Heinrich Klaasen','WK','South Africa',true,125,4),(6,'Hardik Pandya','AR','India',false,125,5),(7,'Pat Cummins','PACE','Australia',true,200,6),(8,'Yashasvi Jaiswal','BAT','India',false,100,7),(9,'Ravindra Jadeja','AR','India',false,150,8),(10,'Travis Head','BAT','Australia',true,100,9),(11,'Kuldeep Yadav','SPIN','India',false,75,10),(12,'Shubman Gill','BAT','India',false,200,11),(13,'Sanju Samson','WK','India',false,150,12),(14,'Andre Russell','AR','West Indies',true,125,13),(15,'Mohammed Siraj','PACE','India',false,100,14),(16,'Suryakumar Yadav','BAT','India',false,200,15),(17,'Phil Salt','WK','England',true,100,16),(18,'Axar Patel','AR','India',false,100,17),(19,'Arshdeep Singh','PACE','India',false,100,18),(20,'Yuzvendra Chahal','SPIN','India',false,100,19)
+on conflict(id) do update set name=excluded.name,role=excluded.role,country=excluded.country,overseas=excluded.overseas,base_price=excluded.base_price,sort_order=excluded.sort_order;
 
 alter publication supabase_realtime add table public.rooms;
 alter publication supabase_realtime add table public.room_members;
