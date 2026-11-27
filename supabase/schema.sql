@@ -12,7 +12,7 @@ create table if not exists public.players (
 alter table public.players add column if not exists base_price integer;
 alter table public.players add column if not exists sort_order integer;
 create table if not exists public.rooms (
-  id uuid primary key default gen_random_uuid(),
+  id uuid unique default gen_random_uuid(),
   code text primary key check (length(code)=5),
   host_member_id text not null,
   host_name text not null,
