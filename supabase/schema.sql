@@ -9,6 +9,8 @@ create table if not exists public.players (
   base_price integer not null,
   sort_order integer not null unique
 );
+alter table public.players add column if not exists base_price integer;
+alter table public.players add column if not exists sort_order integer;
 create table if not exists public.rooms (
   code text primary key check (length(code)=5),
   host_member_id text not null,
