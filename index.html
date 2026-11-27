@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D IPL Auction Room</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>Loading IPL Auction Room...</h2>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <!-- 3D Scene will be rendered here -->
+    </div>
+
+    <!-- Overlay UI -->
+    <div class="overlay-ui">
+        <!-- Timer -->
+        <div class="timer" id="timer">60</div>
+        
+        <!-- Team Panels (Left Side) -->
+        <div class="team-panels">
+            <div class="team-panel mi">
+                <h3>Mumbai Indians</h3>
+                <p>Budget: <span id="mi-budget">₹100 Cr</span></p>
+                <p>Players: <span id="mi-count">0</span></p>
+            </div>
+            <div class="team-panel csk">
+                <h3>Chennai Super Kings</h3>
+                <p>Budget: <span id="csk-budget">₹100 Cr</span></p>
+                <p>Players: <span id="csk-count">0</span></p>
+            </div>
+            <div class="team-panel rcb">
+                <h3>Royal Challengers</h3>
+                <p>Budget: <span id="rcb-budget">₹100 Cr</span></p>
+                <p>Players: <span id="rcb-count">0</span></p>
+            </div>
+            <div class="team-panel kkr">
+                <h3>Kolkata Knight Riders</h3>
+                <p>Budget: <span id="kkr-budget">₹100 Cr</span></p>
+                <p>Players: <span id="kkr-count">0</span></p>
+            </div>
+        </div>
+
+        <!-- Current Player Display -->
+        <div class="player-display" id="player-display">
+            <h2 id="player-name">Waiting for auction...</h2>
+            <div id="player-info">
+                <p>Role: -</p>
+                <p>Base Price: -</p>
+            </div>
+            <div class="bid-info">
+                <h3>Current Bid: <span id="current-bid">₹0 Cr</span></h3>
+                <p>Leading: <span id="active-team">No bids</span></p>
+            </div>
+        </div>
+
+        <!-- Sold Players Panel -->
+        <div class="sold-players" id="sold-players">
+            <h3>Recently Sold</h3>
+            <ul id="sold-list"></ul>
+        </div>
+
+        <!-- Auction Controls -->
+        <div class="auction-controls">
+            <button class="team-bid-btn mi" data-team="MI">MI<br>Bid +0.5</button>
+            <button class="team-bid-btn csk" data-team="CSK">CSK<br>Bid +0.5</button>
+            <button class="team-bid-btn rcb" data-team="RCB">RCB<br>Bid +0.5</button>
+            <button class="team-bid-btn kkr" data-team="KKR">KKR<br>Bid +0.5</button>
+            
+            <div class="custom-bid">
+                <input type="number" id="custom-bid" placeholder="Bid Amount" step="0.5" min="1">
+                <button id="custom-bid-btn">Place Custom Bid</button>
+            </div>
+            
+            <button id="start-auction">Start Auction</button>
+        </div>
+
+        <!-- Bid Display -->
+        <div class="bid-display">
+            <h3>Auction Status</h3>
+            <p>Players Left: <span id="players-left">50</span></p>
+            <p>Total Sold: <span id="total-sold">0</span></p>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/threeScene.js"></script>
+    <script src="js/auctionManager.js"></script>
+    <script src="js/sceneManager.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

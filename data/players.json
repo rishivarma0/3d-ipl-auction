@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1,
+    "name": "Virat Kohli",
+    "role": "Batsman",
+    "speciality": "Chase Master",
+    "basePrice": 20,
+    "team": "India",
+    "stats": {
+      "matches": 237,
+      "runs": 7263,
+      "average": 37.25,
+      "strikeRate": 130.02,
+      "centuries": 7,
+      "fifties": 50
+    }
+  },
+  {
+    "id": 2,
+    "name": "MS Dhoni",
+    "role": "Wicketkeeper",
+    "speciality": "Finisher",
+    "basePrice": 15,
+    "team": "India",
+    "stats": {
+      "matches": 250,
+      "runs": 5082,
+      "average": 38.79,
+      "strikeRate": 135.92,
+      "catches": 142,
+      "stumpings": 42
+    }
+  },
+  {
+    "id": 3,
+    "name": "Jasprit Bumrah",
+    "role": "Bowler",
+    "speciality": "Yorker Specialist",
+    "basePrice": 18,
+    "team": "India",
+    "stats": {
+      "matches": 120,
+      "wickets": 145,
+      "economy": 7.41,
+      "best": "5/10",
+      "average": 23.11
+    }
+  },
+  {
+    "id": 4,
+    "name": "Rohit Sharma",
+    "role": "Batsman",
+    "speciality": "Hitman",
+    "basePrice": 16,
+    "team": "India",
+    "stats": {
+      "matches": 243,
+      "runs": 5879,
+      "average": 30.30,
+      "strikeRate": 129.89,
+      "centuries": 1,
+      "fifties": 40
+    }
+  },
+  {
+    "id": 5,
+    "name": "Glenn Maxwell",
+    "role": "All-rounder",
+    "speciality": "Big Hitting",
+    "basePrice": 14,
+    "team": "Australia",
+    "stats": {
+      "matches": 124,
+      "runs": 2719,
+      "wickets": 33,
+      "strikeRate": 157.62,
+      "average": 26.61
+    }
+  },
+  {
+    "id": 6,
+    "name": "AB de Villiers",
+    "role": "Batsman",
+    "speciality": "360 Degree",
+    "basePrice": 16,
+    "team": "South Africa",
+    "stats": {
+      "matches": 184,
+      "runs": 5162,
+      "average": 39.71,
+      "strikeRate": 151.69,
+      "centuries": 3,
+      "fifties": 40
+    }
+  },
+  {
+    "id": 7,
+    "name": "Rashid Khan",
+    "role": "Bowler",
+    "speciality": "Mystery Spinner",
+    "basePrice": 12,
+    "team": "Afghanistan",
+    "stats": {
+      "matches": 109,
+      "wickets": 112,
+      "economy": 6.24,
+      "best": "5/3",
+      "average": 20.75
+    }
+  },
+  {
+    "id": 8,
+    "name": "Hardik Pandya",
+    "role": "All-rounder",
+    "speciality": "Power Hitter",
+    "basePrice": 13,
+    "team": "India",
+    "stats": {
+      "matches": 123,
+      "runs": 1968,
+      "wickets": 52,
+      "strikeRate": 153.91,
+      "average": 28.38
+    }
+  },
+  {
+    "id": 9,
+    "name": "KL Rahul",
+    "role": "Wicketkeeper",
+    "speciality": "Anchor",
+    "basePrice": 17,
+    "team": "India",
+    "stats": {
+      "matches": 118,
+      "runs": 4163,
+      "average": 46.75,
+      "strikeRate": 134.42,
+      "centuries": 4,
+      "fifties": 33
+    }
+  },
+  {
+    "id": 10,
+    "name": "David Warner",
+    "role": "Batsman",
+    "speciality": "Aggressive Opener",
+    "basePrice": 14,
+    "team": "Australia",
+    "stats": {
+      "matches": 176,
+      "runs": 5881,
+      "average": 41.59,
+      "strikeRate": 140.69,
+      "centuries": 4,
+      "fifties": 55
+    }
+  }
+]
