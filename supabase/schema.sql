@@ -147,3 +147,4 @@ alter publication supabase_realtime add table public.rooms;
 alter publication supabase_realtime add table public.room_members;
 alter publication supabase_realtime add table public.sold_players;
 alter publication supabase_realtime add table public.room_messages;
+notify pgrst, 'reload schema';
