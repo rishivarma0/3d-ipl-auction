@@ -25,7 +25,7 @@ export default function Home() {
     if (join && roomCode.length !== 5) return setError('Enter a five-character room code.');
     setBusy(true); setError('');
     const id = memberId();
-    const { data, error: rpcError } = await supabase.rpc(join ? 'join_room' : 'create_room', join ? { p_code:roomCode, p_member_id:id, p_name:name.trim(), p_team:team } : { p_code:roomCode, p_member_id:id, p_name:name.trim(), p_team:team, p_timer_seconds:20 });
+    const { data, error: rpcError } = await supabase.rpc(join ? 'join_auction_room' : 'create_auction_room', join ? { p_code:roomCode, p_member_id:id, p_name:name.trim(), p_team:team } : { p_code:roomCode, p_member_id:id, p_name:name.trim(), p_team:team, p_timer_seconds:20 });
     setBusy(false);
     if (rpcError) return setError(rpcError.message);
     localStorage.setItem(`ipl-player:${roomCode}`, JSON.stringify({ memberId:id, name:name.trim(), team }));
