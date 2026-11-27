@@ -184,8 +184,11 @@ insert into players(id,name,role,country,overseas,base,base_price,sort_order) va
 (1,'Virat Kohli','BAT','India',false,200,200,0),(2,'Jasprit Bumrah','PACE','India',false,200,200,1),(3,'Rashid Khan','SPIN','Afghanistan',true,150,150,2),(4,'Ruturaj Gaikwad','BAT','India',false,100,100,3),(5,'Heinrich Klaasen','WK','South Africa',true,125,125,4),(6,'Hardik Pandya','AR','India',false,125,125,5),(7,'Pat Cummins','PACE','Australia',true,200,200,6),(8,'Yashasvi Jaiswal','BAT','India',false,100,100,7),(9,'Ravindra Jadeja','AR','India',false,150,150,8),(10,'Travis Head','BAT','Australia',true,100,100,9),(11,'Kuldeep Yadav','SPIN','India',false,75,75,10),(12,'Shubman Gill','BAT','India',false,200,200,11),(13,'Sanju Samson','WK','India',false,150,150,12),(14,'Andre Russell','AR','West Indies',true,125,125,13),(15,'Mohammed Siraj','PACE','India',false,100,100,14),(16,'Suryakumar Yadav','BAT','India',false,200,200,15),(17,'Phil Salt','WK','England',true,100,100,16),(18,'Axar Patel','AR','India',false,100,100,17),(19,'Arshdeep Singh','PACE','India',false,100,100,18),(20,'Yuzvendra Chahal','SPIN','India',false,100,100,19)
 on conflict(id) do update set name=excluded.name,role=excluded.role,country=excluded.country,overseas=excluded.overseas,base=excluded.base,base_price=excluded.base_price,sort_order=excluded.sort_order;
 
-alter publication supabase_realtime add table public.rooms;
-alter publication supabase_realtime add table public.room_members;
-alter publication supabase_realtime add table public.sold_players;
-alter publication supabase_realtime add table public.room_messages;
+do $$
+begin
+  if not exists (select 1 from pg_publication_rel pr join pg_class c on c.oid=pr.prrelid join pg_namespace n on n.oid=c.relnamespace join pg_publication p on p.oid=pr.prpubid where p.pubname='supabase_realtime' and n.nspname='public' and c.relname='rooms') then alter publication supabase_realtime add table public.rooms; end if;
+  if not exists (select 1 from pg_publication_rel pr join pg_class c on c.oid=pr.prrelid join pg_namespace n on n.oid=c.relnamespace join pg_publication p on p.oid=pr.prpubid where p.pubname='supabase_realtime' and n.nspname='public' and c.relname='room_members') then alter publication supabase_realtime add table public.room_members; end if;
+  if not exists (select 1 from pg_publication_rel pr join pg_class c on c.oid=pr.prrelid join pg_namespace n on n.oid=c.relnamespace join pg_publication p on p.oid=pr.prpubid where p.pubname='supabase_realtime' and n.nspname='public' and c.relname='sold_players') then alter publication supabase_realtime add table public.sold_players; end if;
+  if not exists (select 1 from pg_publication_rel pr join pg_class c on c.oid=pr.prrelid join pg_namespace n on n.oid=c.relnamespace join pg_publication p on p.oid=pr.prpubid where p.pubname='supabase_realtime' and n.nspname='public' and c.relname='room_messages') then alter publication supabase_realtime add table public.room_messages; end if;
+end $$;
 notify pgrst, 'reload schema';
