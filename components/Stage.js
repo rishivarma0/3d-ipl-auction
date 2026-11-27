@@ -38,7 +38,7 @@ function Podium({ team, color, x, active }) {
   </group>;
 }
 
-function RoomSet({ color, player, bid, bidder, members = [] }) {
+function RoomSet({ color, selectedTeam, player, bid, bidder, members = [] }) {
   return <>
     <ambientLight intensity={0.72} />
     <spotLight position={[0, 6, -2]} intensity={60} angle={0.48} penumbra={0.65} distance={18} castShadow color="#fff8df" />
@@ -49,13 +49,13 @@ function RoomSet({ color, player, bid, bidder, members = [] }) {
     <mesh position={[0, 0.22, 0.7]}><boxGeometry args={[0.12, 1.1, 0.12]} /><meshStandardMaterial color="#7383ad" /></mesh>
     <mesh position={[0, 0.75, 0.7]}><boxGeometry args={[1.1, 0.08, 0.08]} /><meshStandardMaterial color="#7383ad" /></mesh>
     <FloatingPlayer player={player} bid={bid} bidder={bidder} color={color} />
-    {PODIUMS.map(p => <Podium key={p.team} {...p} active={bidder === p.team || members.some(m => m.team === p.team && m.user_id === bidder)} />)}
+    {PODIUMS.filter(p => !selectedTeam || p.team === selectedTeam).map(p => <Podium key={p.team} {...p} x={0} active={bidder === p.team || members.some(m => m.team === p.team && m.user_id === bidder)} />)}
   </>;
 }
 
-export default function Stage({ color = '#ffc83d', player, bid, bidder, members }) {
+export default function Stage({ color = '#ffc83d', selectedTeam, player, bid, bidder, members }) {
   return <Canvas shadows camera={{ position: [0, 1.5, 5.2], fov: 45 }} gl={{ antialias: true, powerPreference: 'low-power' }}>
     <color attach="background" args={['#0b1020']} />
-    <RoomSet color={color} player={player} bid={bid} bidder={bidder} members={members} />
+    <RoomSet color={color} selectedTeam={selectedTeam} player={player} bid={bid} bidder={bidder} members={members} />
   </Canvas>;
 }

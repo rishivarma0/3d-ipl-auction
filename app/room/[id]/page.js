@@ -1,3 +1,3 @@
 'use client';
-import Arena from '../../../components/Arena';
-export default function RoomPage({ params }) { return <Arena code={params.id.toUpperCase()} />; }
+import MultiplayerArena from '../../../components/MultiplayerArena';
+export default function RoomPage({ params }) { return <MultiplayerArena code={params.id.toUpperCase()} />; }
