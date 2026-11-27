@@ -10,10 +10,24 @@ const money=v=>v>=100?`₹${(v/100).toFixed(2)} Cr`:`₹${v} L`;
 const role={BAT:'BATTER',WK:'KEEPER',AR:'ALL-ROUNDER',PACE:'PACER',SPIN:'SPINNER'};
 const initial=(code)=>({code,status:'auction',index:0,bid:0,bidder:null,sold:[],teams:{},started:Date.now()});
 
+function normalizeRoom(room, player) {
+  if (!room) return null;
+  const index = Number.isInteger(room.index) ? room.index : (Number.isInteger(room.current) ? room.current : 0);
+  return {
+    ...room,
+    index: Math.max(0, Math.min(index, PLAYERS.length - 1)),
+    bid: Number.isFinite(room.bid) ? room.bid : 0,
+    bidder: room.bidder || null,
+    sold: Array.isArray(room.sold) ? room.sold : [],
+    teams: { ...(room.teams || {}), ...(player?.team ? { [player.team]: player.name } : {}) },
+    status: room.status || 'auction',
+  };
+}
+
 export default function Arena({code}) {
   const [room,setRoom]=useState(null); const [me,setMe]=useState(null); const [error,setError]=useState('');
-  useEffect(()=>{ const p=JSON.parse(localStorage.getItem(`ipl-player:${code}`)||'null'); const r=JSON.parse(localStorage.getItem(`ipl-room:${code}`)||'null'); setMe(p); setRoom(r); if(!r) setError('Room not found. Create a room from the home screen.'); const on=()=>setRoom(JSON.parse(localStorage.getItem(`ipl-room:${code}`)||'null')); addEventListener('storage',on); return()=>removeEventListener('storage',on); },[code]);
-  const save=r=>{setRoom(r);localStorage.setItem(`ipl-room:${code}`,JSON.stringify(r));};
+  useEffect(()=>{ const p=JSON.parse(localStorage.getItem(`ipl-player:${code}`)||'null'); const raw=JSON.parse(localStorage.getItem(`ipl-room:${code}`)||'null'); const r=normalizeRoom(raw,p); setMe(p); setRoom(r); if(!r) setError('Room not found. Create a room from the home screen.'); else if(JSON.stringify(r)!==JSON.stringify(raw)) localStorage.setItem(`ipl-room:${code}`,JSON.stringify(r)); const on=()=>{ const next=JSON.parse(localStorage.getItem(`ipl-room:${code}`)||'null'); setRoom(normalizeRoom(next,p)); }; addEventListener('storage',on); return()=>removeEventListener('storage',on); },[code]);
+  const save=r=>{const next=normalizeRoom(r,me);setRoom(next);localStorage.setItem(`ipl-room:${code}`,JSON.stringify(next));};
   if(error) return <main className="shell"><div className="card"><h2>{error}</h2><a href="/">← Back home</a></div></main>;
   if(!room||!me) return <main className="shell"><div className="card">Setting up your auction room…</div></main>;
   return <Game room={room} me={me} save={save}/>;
